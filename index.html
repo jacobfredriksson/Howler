@@ -1,0 +1,103 @@
+
+
+<!DOCTYPE HTML>
+    <html>
+        <head>
+            <title>Howler</title>
+            <meta name="description" content="Howler player">
+            <meta name="author" content="Jacob Fredriksson">
+            <link href="css/header.css">
+            <link href="css/body.css">
+            <link href="css/footer.css">
+            <script src="/libs/howler.min.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/fontawesome.min.css" integrity="sha256-AaQqnjfGDRZd/lUp0Dvy7URGOyRsh8g9JdWUkyYxNfI=" crossorigin="anonymous" />
+        </head>
+        <body>
+
+            <div class="header_wrapper">
+                <div class="header_container">
+                    <h1> Jacobs Mp3 player </h1>
+                </div>
+            </div>
+
+            <div class="body_wrapper"> 
+                <div id="howler_player"></div>
+                <audio id="player" controls src="assets/test.mp3"></audio>
+                <!-- <i class="fas fa-play"></i>  -->
+                <div id="start_counter"> 0 </div>
+                <div id="end_counter"> 0 </div>
+                <div id="play"> Play </div>
+                <div id="pause"> Pause </div>
+                <div id="stop"> Stop </div>
+                <div id="upload_container"> 
+                    <input type="file" id="upload">
+                </div>
+                <div id="upload_button"> 
+                    Upload
+                </div>
+
+                <div id="previous"> Previous </div>
+                <div id="next"> Next </div>
+
+                <ol id="songlist"> 
+                    <!-- <li> jacobsonk</li> -->
+                    
+                </ol>
+                Jacobs player container
+            </div>
+
+
+            <div class="footer_wrapper">
+                <div class="footer_container">
+                    <div>
+                        Jacobs Footer
+                    </div>
+                </div>
+            </div> 
+
+
+            <script> 
+                
+                var songList = [];
+
+                var sound
+                var countUntil = 0;
+
+                var player = document.querySelector("#player");
+                var playButton = document.querySelector("#play").addEventListener('click', playSound);
+                var pauseButton = document.querySelector("#pause").addEventListener('click', pauseSound);
+                var stopButton = document.querySelector("#stop").addEventListener('click', stopSound);
+                var uploadButton = document.querySelector("#upload_button").addEventListener('click', uploadSong);
+                var nextButton = document.querySelector("#upload_button").addEventListener('click', nextSound);
+                var prevButton = document.querySelector("#upload_button").addEventListener('click', prevSound);
+                var startCounter = document.querySelector("#start_counter");
+                var endCounter = document.querySelector("#end_counter");
+
+                var showListOfSongs = document.querySelector("#songlist");
+                console.log(player)
+                function uploadSong() {
+
+                }
+
+                function playSound() {
+                    
+                }
+
+                function pauseSound() {
+                    
+                }
+
+                function stopSound() {
+          
+                }
+
+                function nextSound() {
+
+                }
+
+                function prevSound() {
+
+                }
+            </script>
+        </body>
+    </html>
