@@ -23,6 +23,8 @@
   "homepage": "https://github.com/jacobfredriksson/Howler#readme",
   "dependencies": {
     "howler": "^2.1.2",
-    "node": "^12.6.0"
-  }
+    "node": "^12.6.0",
+    "sass": "^1.22.3"
+  },
+  "devDependencies": {}
 }

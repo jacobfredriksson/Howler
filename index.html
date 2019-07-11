@@ -3,101 +3,248 @@
 <!DOCTYPE HTML>
     <html>
         <head>
-            <title>Howler</title>
+            <!-- <title>Howler</title>
             <meta name="description" content="Howler player">
-            <meta name="author" content="Jacob Fredriksson">
-            <link href="css/header.css">
-            <link href="css/body.css">
-            <link href="css/footer.css">
-            <script src="/libs/howler.min.js"></script>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/fontawesome.min.css" integrity="sha256-AaQqnjfGDRZd/lUp0Dvy7URGOyRsh8g9JdWUkyYxNfI=" crossorigin="anonymous" />
+            <meta name="author" content="Jacob Fredriksson"> -->
+            <link rel="stylesheet" href="css/styles.css" />
+            <script src="https://use.fontawesome.com/bb46586114.js"></script>
+            <link rel="stylesheet" href="https://use.fontawesome.com/c1857e28bb.css">
         </head>
         <body>
 
-            <div class="header_wrapper">
-                <div class="header_container">
-                    <h1> Jacobs Mp3 player </h1>
-                </div>
-            </div>
-
-            <div class="body_wrapper"> 
-                <div id="howler_player"></div>
-                <audio id="player" controls src="assets/test.mp3"></audio>
-                <!-- <i class="fas fa-play"></i>  -->
-                <div id="start_counter"> 0 </div>
-                <div id="end_counter"> 0 </div>
-                <div id="play"> Play </div>
-                <div id="pause"> Pause </div>
-                <div id="stop"> Stop </div>
-                <div id="upload_container"> 
-                    <input type="file" id="upload">
-                </div>
-                <div id="upload_button"> 
-                    Upload
-                </div>
-
-                <div id="previous"> Previous </div>
-                <div id="next"> Next </div>
-
-                <ol id="songlist"> 
-                    <!-- <li> jacobsonk</li> -->
-                    
-                </ol>
-                Jacobs player container
-            </div>
-
-
-            <div class="footer_wrapper">
-                <div class="footer_container">
-                    <div>
-                        Jacobs Footer
+            <div class="player_wrapper"> 
+                <div class="player_container">
+                    <div class="player_main_functions"> 
+                            <div class="upload_container"> 
+                                <input type="file" accept=".mp3" id="upload" style="display: none;">
+                                
+                                <label for="upload" class="upload_file">
+                                    <i class="fa fa-arrow-circle-up"></i> <span>Choose a file</span>
+                                </label>
+                            </div>
+                            <!-- <div id="toggle_mute_button" class="toggle_mute_button">  
+                                    <i class="fa fa-volume-mute"></i>
+                                    <i class="fa fa-volume-up"></i>
+                            </div> -->
+                        <div class="main_functions_top">
+                            <div class="functions_top-flex">
+                                <div id="prev" class="prev"> <i class="fa fa-step-backward"></i> </div>
+                                <div id="play" class="play"> <i class="fa fa-play-circle"></i> </div>
+                                <div id="pause" class="pause playerActive"> <i class="fa fa-pause-circle"></i> </div>
+                                <div id="next" class="next"> <i class="fa fa-step-forward"></i> </div>
+                            </div>
+                        </div>
+                        <div class="main_functions_bottom">
+                            <div id="stop"> <i class="fa fa-stop-circle"></i> </div>
+                            <div class="start_counter" id="start_counter"> 0 </div>
+                            <input type="range" min="0" max="100" value="0" id="soundTracker" class="soundTracker">
+                            <div class="end_counter" id="end_counter"> 0 </div>
+                            <div id="toggle_mute_button" class="">  
+                                    <i class="fa fa-volume-mute"></i>
+                                    <i class="fa fa-volume-up"></i>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div> 
+
+                    <div class="playlist_wrapper">
+                        <div class="playlist_container"> 
+                            <p> playlist </p>
+                            <ol id="soundlist"> 
+                                
+                            </ol>
+                        </div>
+                    </div>    
+                </div>    
+            </div>
 
 
             <script> 
+            
+                var playList = [];
+                var songId = 0
+                var globalFileName;
+                var globalFile;
                 
-                var songList = [];
+                var soundInterval 
+                var sound;
+                var timer = 0;
+                var counting = false;
 
-                var sound
-                var countUntil = 0;
 
                 var player = document.querySelector("#player");
-                var playButton = document.querySelector("#play").addEventListener('click', playSound);
-                var pauseButton = document.querySelector("#pause").addEventListener('click', pauseSound);
+                var playButton = document.querySelector("#play");
+                playButton.addEventListener('click', playSound);
+                var pauseButton = document.querySelector("#pause");
+                pauseButton.addEventListener('click', pauseSound);
                 var stopButton = document.querySelector("#stop").addEventListener('click', stopSound);
-                var uploadButton = document.querySelector("#upload_button").addEventListener('click', uploadSong);
-                var nextButton = document.querySelector("#upload_button").addEventListener('click', nextSound);
-                var prevButton = document.querySelector("#upload_button").addEventListener('click', prevSound);
-                var startCounter = document.querySelector("#start_counter");
-                var endCounter = document.querySelector("#end_counter");
+                var uploadInput = document.querySelector("#upload").addEventListener('change', uploadSound);
+                var nextButton = document.querySelector("#next").addEventListener('click', nextSound);
+                var prevButton = document.querySelector("#prev").addEventListener('click', prevSound);
+                var toggleMuteButton = document.querySelector("#toggle_mute_button").addEventListener('click', toggleSound);
+                var currentPlayTime = document.querySelector("#start_counter");
+                var songLength = document.querySelector("#end_counter");
+                var soundTracker = document.querySelector("#soundTracker");
+                var visualPlayList = document.querySelector("#soundlist");
 
-                var showListOfSongs = document.querySelector("#songlist");
-                console.log(player)
-                function uploadSong() {
+                soundTracker.addEventListener('change', function() {
+                    if(sound) {
+                        sound.currentTime = this.value;
+                    }
+                })
 
+                soundTracker.oninput = function() {
+                    currentPlayTime.innerHTML = this.value
+                    if (sound) {
+                        sound.seeking = true;
+                    }
+                }
+
+                function uploadSound() {
+                    var uploadfile = document.getElementById("upload");
+                    var file = uploadfile.files[0].name
+                    var fReader = new FileReader();
+                    fReader.readAsDataURL(uploadfile.files[0]);
+                    fReader.onloadend = function(event){
+                        sound = new Audio(event.target.result)
+                        globalFileName = file;
+                        globalFile = event.target.result; 
+                        getReady(globalFileName, globalFile)
+                    }
+                }
+
+                function startTimer() {
+                    soundInterval = setInterval(function() {
+                        if(counting) {
+                            timer++
+                            currentPlayTime.innerHTML = timer;
+                            soundTracker.value = timer;
+                        } if(timer >= Math.round(sound.duration)) {
+                            clearInterval(soundInterval);
+                        }
+                        console.log("timer körs", timer)
+                    }, 1000);
+                }
+
+                function getReady(name, file) {
+                    if(sound.readyState !== 4) {
+                        console.log(sound.readyState);
+                        setTimeout(function(){ getReady(globalFileName, globalFile)  }, 500);
+                    } else {
+                        clearPlayer();
+                        
+                        playList.push({
+                            name: name,
+                            file: file,
+                            id: "position" + songId
+                        });
+                        
+                        clearHighlight() 
+
+                        var li = document.createElement("li");
+                        li.appendChild(document.createTextNode(name));
+                        li.setAttribute("id", "position" + songId);
+                        li.setAttribute("class", "active_sound");
+                        visualPlayList.appendChild(li);   
+                        songId++
+                        console.log(playList);
+                        console.log("Nu är vi redo!")
+                        console.log(sound.duration)
+                        soundTracker.setAttribute("max", sound.duration);
+                        songLength.innerHTML = Math.round(sound.duration);
+                    }
+                }
+
+                function clearHighlight() {
+                    document.querySelectorAll("li").forEach(function(el){
+                        el.classList.remove("active_sound")
+                    })
+                    console.log("cleared HighLights")
                 }
 
                 function playSound() {
-                    
-                }
+                    if(sound) {
+                        sound.play();
+                        counting = true;
+                        playButton.classList.add("playerActive");
+                        pauseButton.classList.remove("playerActive"); 
+
+                        startTimer()
+                    } else {
+                        return
+                    }
+                };
 
                 function pauseSound() {
-                    
-                }
+                    if(sound) {
+                        sound.pause();
+                        counting = false;
+                        playButton.classList.remove("playerActive");
+                        pauseButton.classList.add("playerActive"); 
+                        clearInterval(soundInterval);
+                    } else {
+                        return
+                    }
+                };
 
                 function stopSound() {
-          
+                    if(sound) {
+                        sound.pause();
+                        counting = false;
+                        timer = 0;
+                        sound.currentTime = 0;
+                        currentPlayTime.innerHTML = timer;
+                        clearInterval(soundInterval);
+                        playButton.classList.add("playerActive");
+                        pauseButton.classList.remove("playerActive"); 
+                    } else {
+                        return
+                    }
+                };
+
+                function toggleSound() {
+                    if(sound) {
+                        var soundStatus = sound.muted ? false : true
+                        sound.muted = soundStatus;
+                        console.log(soundStatus)
+                    } else {
+                        return
+                    }
                 }
+                var songIndex = playList.length;
 
                 function nextSound() {
-
-                }
+                    console.log("next", songIndex)
+                    if(playList.length > 1 && songIndex < playList.length-1) {
+                        clearHighlight()
+                        songIndex++
+                        console.log("#" + playList[songIndex].id)
+                        sound = new Audio(playList[songIndex].file)
+                        document.querySelector("#" + playList[songIndex].id).classList.add("active_sound")
+                    } 
+                };
 
                 function prevSound() {
+                    console.log("prev", songIndex)
+                    if(playList.length > 1 && songIndex > 0) {
+                        clearHighlight()
+                        songIndex--
+                        console.log("#" + playList[songIndex].id)
+                        sound = new Audio(playList[songIndex].file)
+                        document.querySelector("#" + playList[songIndex].id).classList.add("active_sound")
+                    } 
+                };
 
+                function clearPlayer() {
+                    sound.pause();
+                    counting = false;
+                    timer = 0;
+                    sound.currentTime = 0;
+                    currentPlayTime.innerHTML = timer;
+                    clearInterval(soundInterval);
                 }
+
+
+
             </script>
         </body>
     </html>

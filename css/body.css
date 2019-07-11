@@ -1,9 +1,0 @@
-body {
-    margin: 0 auto;
-    padding: 0 auto;
-    height: 100vh;
-}
-
-.body_wrapper {
-    height: calc(100% - 150px);
-}
