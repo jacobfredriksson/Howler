@@ -23,7 +23,7 @@
                 var songLength          = document.querySelector("#end_counter");
                 var soundTracker        = document.querySelector("#soundTracker");
                 var visualPlayList      = document.querySelector("#soundlist");
-                
+
 
                 //EventListeners
                 pauseButton.addEventListener('click', pauseSound);
@@ -54,19 +54,19 @@
                     }
                 })
 
-                //live update slide. 
+                //live update slide.
                 soundTracker.oninput = function() {
                     currentPlayTime.innerHTML = formatTime(this.value) ;
                     soundSeeking = true;
                 };
 
-                //create blob of file. 
+                //create blob of file.
                 function uploadSound() {
                     var uploadfile = document.getElementById("upload");
                     var file = uploadfile.files[0].name;
                     var fReader = new FileReader();
 
-                   var ext = file.name.split(".").pop().toLowerCase();
+                   var ext = file.split(".").pop().toLowerCase();
                    if($.inArray(ext, ["mp3"]) == -1) {
                         alert("You cant uplaod other files than mp3")
                         return
@@ -79,7 +79,7 @@
                             setEvent();
                         }
                         globalFileName = file;
-                        globalFile = event.target.result; 
+                        globalFile = event.target.result;
                         getReady(globalFileName, globalFile);
                         }
                 }
@@ -104,7 +104,7 @@
                     if(sound.readyState !== 4) {
                         setTimeout(function(){ getReady(globalFileName, globalFile)  }, 500);
                     } else {
-                        
+
                         var foundEqualSound = playList.filter(function(item) {
                             if(item.name == name) {
                                 alert( "this song already exists " );
@@ -140,10 +140,10 @@
                     }
                     li.setAttribute("data-src", file);
                     li.setAttribute("data-filename", name);
-                    visualPlayList.appendChild(li);   
+                    visualPlayList.appendChild(li);
                     songId++
                     soundTracker.setAttribute("max", sound.duration);
-                    var time = sound.duration;   
+                    var time = sound.duration;
                     songLength.innerHTML = formatTime(time);
 
                 }
@@ -174,7 +174,7 @@
                         sound.play();
                         counting = true;
                         playButton.classList.add("playerActive");
-                        pauseButton.classList.remove("playerActive"); 
+                        pauseButton.classList.remove("playerActive");
 
                         startTimer();
                     } else {
@@ -188,7 +188,7 @@
                         sound.pause();
                         counting = false;
                         playButton.classList.remove("playerActive");
-                        pauseButton.classList.add("playerActive"); 
+                        pauseButton.classList.add("playerActive");
                         clearInterval(soundInterval);
                     } else {
                         return;
@@ -206,7 +206,7 @@
                         currentPlayTime.innerHTML = formatTime(timer);
                         clearInterval(soundInterval);
                         playButton.classList.remove("playerActive");
-                        pauseButton.classList.add("playerActive"); 
+                        pauseButton.classList.add("playerActive");
                     } else {
                         return
                     }
@@ -246,7 +246,7 @@
                         songIndex--
                         sound.src = playList[songIndex].file;
                         switchSound(playList[songIndex].file, playList[songIndex].id);
-                    } 
+                    }
                 };
 
                 //Clear current sound data
@@ -258,7 +258,7 @@
                     currentPlayTime.innerHTML = formatTime(timer);
                     soundTracker.value = 0;
                     playButton.classList.remove("playerActive");
-                    pauseButton.classList.add("playerActive"); 
+                    pauseButton.classList.add("playerActive");
                     clearInterval(soundInterval);
                 };
 
