@@ -35,37 +35,50 @@ body {
 
 .player_wrapper {
   height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
-
 .player_container {
   margin: 40px;
   width: 60%;
   height: 60%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 @media screen and (max-width: 768px) {
   .player_container {
-    width: 80%;
+    width: 100%;
     height: 80%;
     margin: 20px;
   }
 }
 .player_container .player_main_functions {
   max-height: 300px;
+  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-pack: distribute;
   justify-content: space-around;
   background-color: #212121;
   border-radius: 15px;
   padding: 25px;
   -webkit-box-shadow: 3px -4px 25px 24px black;
-  -moz-box-shadow: 3px -4px 25px 24px black;
   box-shadow: 3px -4px 25px 24px black;
 }
 @media screen and (max-width: 768px) {
@@ -75,15 +88,26 @@ body {
 }
 .player_container .player_main_functions .main_functions_top, .player_container .player_main_functions .main_functions_bottom {
   margin: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   width: 100%;
 }
 .player_container .player_main_functions .main_functions_top .functions_top-flex, .player_container .player_main_functions .main_functions_bottom .functions_top-flex {
   width: 50%;
+  -ms-flex-pack: distribute;
   justify-content: space-around;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 @media screen and (max-width: 768px) {
@@ -110,28 +134,43 @@ body {
   }
 }
 .player_container .player_main_functions .main_functions_bottom {
+  -ms-flex-pack: distribute;
   justify-content: space-around;
   font-size: 25px;
 }
 @media screen and (max-width: 768px) {
   .player_container .player_main_functions .main_functions_bottom {
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
 }
 .player_container .player_main_functions .main_functions_bottom div {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
 }
 .player_container .player_main_functions .main_functions_bottom .stop_button, .player_container .player_main_functions .main_functions_bottom .toggle_mute_button {
+  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   cursor: pointer;
   min-width: 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 @media screen and (max-width: 768px) {
   .player_container .player_main_functions .main_functions_bottom .stop_button, .player_container .player_main_functions .main_functions_bottom .toggle_mute_button {
+    -webkit-box-ordinal-group: 3;
+    -ms-flex-order: 2;
     order: 2;
+    -webkit-box-flex: 50%;
+    -ms-flex: 50%;
     flex: 50%;
     margin-top: 30px;
   }
@@ -149,11 +188,16 @@ body {
 .upload_container {
   width: 100%;
   padding: 15px 25px 10px 0px;
+  -ms-flex-item-align: start;
   align-self: flex-start;
 }
 @media screen and (max-width: 768px) {
   .upload_container {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
     padding: 5px;
   }
@@ -168,13 +212,20 @@ body {
 
 .playlist_wrapper {
   width: 100%;
+  background-color: #212121;
+  margin: 50px 0;
+}
+@media screen and (max-width: 768px) {
+  .playlist_wrapper {
+    margin: 0;
+    margin-top: 25px;
+    min-height: 150px;
+  }
 }
 .playlist_wrapper .playlist_container {
   -webkit-box-shadow: 3px -4px 25px 24px black;
-  -moz-box-shadow: 3px -4px 25px 24px black;
   box-shadow: 3px -4px 25px 24px black;
   border-radius: 15px;
-  margin: 50px 0;
   min-height: 100%;
   width: 100%;
   background-color: #212121;
