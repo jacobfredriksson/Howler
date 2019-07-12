@@ -1,22 +1,46 @@
+.frame::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+.frame::-webkit-scrollbar:vertical {
+  width: 11px;
+}
+
+.frame::-webkit-scrollbar:horizontal {
+  height: 11px;
+}
+
+.frame::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 2px solid white;
+  /* should match background, can't be transparent */
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.frame::-webkit-scrollbar-track {
+  background-color: #fff;
+  border-radius: 8px;
+}
+
 body {
   margin: 0 auto;
   padding: 0 auto;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   background-color: #121212;
   color: #B3B3B3;
   overflow: hidden;
+  font-family: "Montserrat", sans-serif;
 }
 
 .player_wrapper {
   height: 100%;
-  border: 1px solid #fff;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .player_container {
+  margin: 40px;
   width: 60%;
   height: 60%;
   display: flex;
@@ -27,9 +51,11 @@ body {
   .player_container {
     width: 80%;
     height: 80%;
+    margin: 20px;
   }
 }
 .player_container .player_main_functions {
+  max-height: 300px;
   flex-wrap: wrap;
   align-items: center;
   width: 100%;
@@ -37,11 +63,18 @@ body {
   justify-content: space-around;
   background-color: #212121;
   border-radius: 15px;
+  padding: 25px;
   -webkit-box-shadow: 3px -4px 25px 24px black;
   -moz-box-shadow: 3px -4px 25px 24px black;
   box-shadow: 3px -4px 25px 24px black;
 }
+@media screen and (max-width: 768px) {
+  .player_container .player_main_functions {
+    padding: 15px 5px;
+  }
+}
 .player_container .player_main_functions .main_functions_top, .player_container .player_main_functions .main_functions_bottom {
+  margin: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,6 +85,11 @@ body {
   justify-content: space-around;
   display: flex;
   align-items: center;
+}
+@media screen and (max-width: 768px) {
+  .player_container .player_main_functions .main_functions_top .functions_top-flex, .player_container .player_main_functions .main_functions_bottom .functions_top-flex {
+    width: 100%;
+  }
 }
 .player_container .player_main_functions .main_functions_top .functions_top-flex .play, .player_container .player_main_functions .main_functions_top .functions_top-flex .pause, .player_container .player_main_functions .main_functions_bottom .functions_top-flex .play, .player_container .player_main_functions .main_functions_bottom .functions_top-flex .pause {
   font-size: 50px;
@@ -66,12 +104,37 @@ body {
   text-align: center;
   font-size: 15px;
 }
+@media screen and (max-width: 768px) {
+  .player_container .player_main_functions .main_functions_top .start_counter, .player_container .player_main_functions .main_functions_top .end_counter, .player_container .player_main_functions .main_functions_bottom .start_counter, .player_container .player_main_functions .main_functions_bottom .end_counter {
+    min-width: 30px;
+  }
+}
 .player_container .player_main_functions .main_functions_bottom {
   justify-content: space-around;
   font-size: 25px;
 }
-.player_container .player_main_functions .main_functions_bottom #stop, .player_container .player_main_functions .main_functions_bottom #toggle_mute_button {
+@media screen and (max-width: 768px) {
+  .player_container .player_main_functions .main_functions_bottom {
+    flex-wrap: wrap;
+  }
+}
+.player_container .player_main_functions .main_functions_bottom div {
+  flex: 1;
+}
+.player_container .player_main_functions .main_functions_bottom .stop_button, .player_container .player_main_functions .main_functions_bottom .toggle_mute_button {
+  flex-wrap: wrap;
   cursor: pointer;
+  min-width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media screen and (max-width: 768px) {
+  .player_container .player_main_functions .main_functions_bottom .stop_button, .player_container .player_main_functions .main_functions_bottom .toggle_mute_button {
+    order: 2;
+    flex: 50%;
+    margin-top: 30px;
+  }
 }
 
 .playerActive {
@@ -83,19 +146,17 @@ body {
   margin: 0 20px;
 }
 
-.toggle_mute_button {
-  align-self: flex-start;
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  font-size: 25px;
-  padding: 25px;
-}
-
 .upload_container {
   width: 100%;
-  margin: 25px 10px;
+  padding: 15px 25px 10px 0px;
   align-self: flex-start;
+}
+@media screen and (max-width: 768px) {
+  .upload_container {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+  }
 }
 
 .upload_file {
@@ -115,12 +176,15 @@ body {
   border-radius: 15px;
   margin: 50px 0;
   min-height: 100%;
-  width: 30%;
-  text-align: center;
+  width: 100%;
   background-color: #212121;
 }
 .playlist_wrapper .playlist_container p {
   padding: 25px;
+}
+.playlist_wrapper .playlist_container ol {
+  max-height: 200px;
+  overflow-y: scroll;
 }
 
 .active_sound {

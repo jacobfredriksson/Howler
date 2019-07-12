@@ -6,26 +6,25 @@
             <!-- <title>Howler</title>
             <meta name="description" content="Howler player">
             <meta name="author" content="Jacob Fredriksson"> -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
             <link rel="stylesheet" href="css/styles.css" />
             <script src="https://use.fontawesome.com/bb46586114.js"></script>
             <link rel="stylesheet" href="https://use.fontawesome.com/c1857e28bb.css">
+            <link href="https://fonts.googleapis.com/css?family=Montserrat:600&display=swap" rel="stylesheet">
         </head>
         <body>
 
             <div class="player_wrapper"> 
                 <div class="player_container">
                     <div class="player_main_functions"> 
-                            <div class="upload_container"> 
-                                <input type="file" accept=".mp3" id="upload" style="display: none;">
-                                
-                                <label for="upload" class="upload_file">
-                                    <i class="fa fa-arrow-circle-up"></i> <span>Choose a file</span>
-                                </label>
-                            </div>
-                            <!-- <div id="toggle_mute_button" class="toggle_mute_button">  
-                                    <i class="fa fa-volume-mute"></i>
-                                    <i class="fa fa-volume-up"></i>
-                            </div> -->
+                        <div class="upload_container"> 
+                            <input type="file" accept=".mp3" id="upload" style="display: none;">
+                            
+                            <label for="upload" class="upload_file">
+                                <i class="fa fa-arrow-circle-up"></i> <span>Upload file</span>
+                            </label>
+                        </div>
+
                         <div class="main_functions_top">
                             <div class="functions_top-flex">
                                 <div id="prev" class="prev"> <i class="fa fa-step-backward"></i> </div>
@@ -35,20 +34,20 @@
                             </div>
                         </div>
                         <div class="main_functions_bottom">
-                            <div id="stop"> <i class="fa fa-stop-circle"></i> </div>
-                            <div class="start_counter" id="start_counter"> 0 </div>
+                            <div class="stop_button" id="stop"> <i class="fa fa-stop-circle"></i> </div>
+                            <div class="start_counter" id="start_counter"> 0:00 </div>
                             <input type="range" min="0" max="100" value="0" id="soundTracker" class="soundTracker">
-                            <div class="end_counter" id="end_counter"> 0 </div>
-                            <div id="toggle_mute_button" class="">  
-                                    <i class="fa fa-volume-mute"></i>
-                                    <i class="fa fa-volume-up"></i>
+                            <div class="end_counter" id="end_counter"> 0:00 </div>
+                            <div id="toggle_mute_button" class="toggle_mute_button"">  
+                                    <i class="mute_icon fa fa-volume-up"></i>
+                                    <!-- <i class="fa fa-volume-off"></i> -->
                             </div>
                         </div>
                     </div>
 
                     <div class="playlist_wrapper">
                         <div class="playlist_container"> 
-                            <p> playlist </p>
+                            <p> Playlist </p>
                             <ol id="soundlist"> 
                                 
                             </ol>
@@ -60,107 +59,170 @@
 
             <script> 
             
+                //Variables
                 var playList = [];
-                var songId = 0
+                var songId = 0;
                 var globalFileName;
                 var globalFile;
-                
-                var soundInterval 
+                var soundSeeking = false;
+                var songIndex = 0;
+
+                var soundInterval ;
                 var sound;
                 var timer = 0;
                 var counting = false;
 
+                var player              = document.querySelector("#player");
+                var playButton          = document.querySelector("#play");
+                var pauseButton         = document.querySelector("#pause");
+                var stopButton          = document.querySelector("#stop");
+                var uploadInput         = document.querySelector("#upload");
+                var nextButton          = document.querySelector("#next");
+                var prevButton          = document.querySelector("#prev");
+                var toggleMuteButton    = document.querySelector("#toggle_mute_button");
+                var currentPlayTime     = document.querySelector("#start_counter");
+                var songLength          = document.querySelector("#end_counter");
+                var soundTracker        = document.querySelector("#soundTracker");
+                var visualPlayList      = document.querySelector("#soundlist");
+                
 
-                var player = document.querySelector("#player");
-                var playButton = document.querySelector("#play");
-                playButton.addEventListener('click', playSound);
-                var pauseButton = document.querySelector("#pause");
+                //EventListeners
                 pauseButton.addEventListener('click', pauseSound);
-                var stopButton = document.querySelector("#stop").addEventListener('click', stopSound);
-                var uploadInput = document.querySelector("#upload").addEventListener('change', uploadSound);
-                var nextButton = document.querySelector("#next").addEventListener('click', nextSound);
-                var prevButton = document.querySelector("#prev").addEventListener('click', prevSound);
-                var toggleMuteButton = document.querySelector("#toggle_mute_button").addEventListener('click', toggleSound);
-                var currentPlayTime = document.querySelector("#start_counter");
-                var songLength = document.querySelector("#end_counter");
-                var soundTracker = document.querySelector("#soundTracker");
-                var visualPlayList = document.querySelector("#soundlist");
+                playButton.addEventListener('click', playSound);
+                stopButton.addEventListener('click', stopSound);
+                uploadInput.addEventListener('change', uploadSound);
+                nextButton.addEventListener('click', nextSound);
+                prevButton.addEventListener('click', prevSound);
+                toggleMuteButton.addEventListener('click', toggleSound);
 
+
+                //Set event listner when "sound exists"
+                function setEvent() {
+                    sound.addEventListener('seeking', (event) => {
+                        soundSeeking = false;
+                        timer = soundTracker.value;
+                    });
+
+                    sound.addEventListener('ended', (event) => {
+                        nextSound();
+                    });
+                }
+
+                //update currenttime on change - dont mix change and oninput.
                 soundTracker.addEventListener('change', function() {
                     if(sound) {
                         sound.currentTime = this.value;
                     }
                 })
 
+                //live update slide. 
                 soundTracker.oninput = function() {
-                    currentPlayTime.innerHTML = this.value
-                    if (sound) {
-                        sound.seeking = true;
-                    }
-                }
+                    currentPlayTime.innerHTML = formatTime(this.value) ;
+                    soundSeeking = true;
+                };
 
+                //create blob of file. 
                 function uploadSound() {
                     var uploadfile = document.getElementById("upload");
-                    var file = uploadfile.files[0].name
+                    var file = uploadfile.files[0].name;
                     var fReader = new FileReader();
                     fReader.readAsDataURL(uploadfile.files[0]);
                     fReader.onloadend = function(event){
-                        sound = new Audio(event.target.result)
+                        if(playList.length == 0) {
+                            sound = new Audio(event.target.result)
+                            setEvent();
+                        }
                         globalFileName = file;
                         globalFile = event.target.result; 
-                        getReady(globalFileName, globalFile)
-                    }
+                        getReady(globalFileName, globalFile);
+                        }
                 }
 
+                //timer during sound play
                 function startTimer() {
                     soundInterval = setInterval(function() {
                         if(counting) {
-                            timer++
-                            currentPlayTime.innerHTML = timer;
-                            soundTracker.value = timer;
+                            timer++;
+                            if(!soundSeeking) {
+                                currentPlayTime.innerHTML = formatTime(timer);
+                                soundTracker.value = timer;
+                            };
                         } if(timer >= Math.round(sound.duration)) {
                             clearInterval(soundInterval);
-                        }
-                        console.log("timer körs", timer)
+                        };
                     }, 1000);
                 }
 
+                //Wait for data
                 function getReady(name, file) {
                     if(sound.readyState !== 4) {
-                        console.log(sound.readyState);
                         setTimeout(function(){ getReady(globalFileName, globalFile)  }, 500);
                     } else {
-                        clearPlayer();
                         
+                        var foundEqualSound = playList.filter(function(item) {
+                            if(item.name == name) {
+                                alert( "this song already exists " );
+                                return item
+                            }
+                        });
+                        console.log(foundEqualSound);
+                        if(foundEqualSound.length > 0) return;
+
                         playList.push({
                             name: name,
                             file: file,
                             id: "position" + songId
                         });
-                        
-                        clearHighlight() 
 
-                        var li = document.createElement("li");
-                        li.appendChild(document.createTextNode(name));
-                        li.setAttribute("id", "position" + songId);
-                        li.setAttribute("class", "active_sound");
-                        visualPlayList.appendChild(li);   
-                        songId++
-                        console.log(playList);
-                        console.log("Nu är vi redo!")
-                        console.log(sound.duration)
-                        soundTracker.setAttribute("max", sound.duration);
-                        songLength.innerHTML = Math.round(sound.duration);
+                        createListItem(name, file);
                     }
                 }
 
-                function clearHighlight() {
-                    document.querySelectorAll("li").forEach(function(el){
-                        el.classList.remove("active_sound")
-                    })
-                    console.log("cleared HighLights")
+                //Create HTML list item
+                function createListItem(name, file) {
+                    var li = document.createElement("li");
+                    var liText = name;
+
+                    if(name.length > 15 ) {
+                        liText = name.slice(0,15) + "...";
+                    }
+
+                    li.appendChild(document.createTextNode(liText));
+                    li.setAttribute("id", "position" + songId);
+                    if(playList.length == 1) {
+                        li.setAttribute("class", "active_sound");
+                    }
+                    li.setAttribute("data-src", file);
+                    li.setAttribute("data-filename", name);
+                    visualPlayList.appendChild(li);   
+                    songId++
+                    soundTracker.setAttribute("max", sound.duration);
+                    var time = sound.duration;   
+                    songLength.innerHTML = formatTime(time);
+
                 }
 
+
+                //FormatTime
+                function formatTime(time) {
+                    var minutes = Math.floor(time/ 60);
+                    var seconds = time - minutes * 60;
+                    if (seconds < 10) {
+                        seconds = "0" + Math.round(seconds);
+                    } else {
+                        seconds = Math.round(seconds);
+                    };
+                    return minutes + ":" + seconds;
+                }
+
+                //Remove highlighed song
+                function clearHighlight() {
+                    document.querySelectorAll("li").forEach(function(el){
+                        el.classList.remove("active_sound");
+                    })
+                }
+
+                //Play
                 function playSound() {
                     if(sound) {
                         sound.play();
@@ -168,12 +230,13 @@
                         playButton.classList.add("playerActive");
                         pauseButton.classList.remove("playerActive"); 
 
-                        startTimer()
+                        startTimer();
                     } else {
-                        return
-                    }
+                        return;
+                    };
                 };
 
+                //Pause
                 function pauseSound() {
                     if(sound) {
                         sound.pause();
@@ -182,68 +245,97 @@
                         pauseButton.classList.add("playerActive"); 
                         clearInterval(soundInterval);
                     } else {
-                        return
-                    }
+                        return;
+                    };
                 };
 
+                //Stop
                 function stopSound() {
                     if(sound) {
                         sound.pause();
                         counting = false;
                         timer = 0;
+                        soundTracker.value = 0;
                         sound.currentTime = 0;
-                        currentPlayTime.innerHTML = timer;
+                        currentPlayTime.innerHTML = formatTime(timer);
                         clearInterval(soundInterval);
-                        playButton.classList.add("playerActive");
-                        pauseButton.classList.remove("playerActive"); 
+                        playButton.classList.remove("playerActive");
+                        pauseButton.classList.add("playerActive"); 
                     } else {
                         return
                     }
                 };
 
+                //Toggle mute
                 function toggleSound() {
                     if(sound) {
-                        var soundStatus = sound.muted ? false : true
+                        var soundStatus = sound.muted ? false : true;
                         sound.muted = soundStatus;
-                        console.log(soundStatus)
+                        if(soundStatus == true) {
+                            $(".mute_icon").addClass("fa-volume-off");
+                            $(".mute_icon").removeClass("fa-volume-up");
+                        } else {
+                            $(".mute_icon").addClass("fa-volume-up");
+                            $(".mute_icon").removeClass("fa-volume-off");
+                        }
                     } else {
-                        return
+                        return;
                     }
                 }
-                var songIndex = playList.length;
 
+                //Play next if there is any
                 function nextSound() {
-                    console.log("next", songIndex)
                     if(playList.length > 1 && songIndex < playList.length-1) {
-                        clearHighlight()
-                        songIndex++
-                        console.log("#" + playList[songIndex].id)
-                        sound = new Audio(playList[songIndex].file)
-                        document.querySelector("#" + playList[songIndex].id).classList.add("active_sound")
-                    } 
+                        songIndex++;
+                        sound.src = playList[songIndex].file;
+                        switchSound(playList[songIndex].file, playList[songIndex].id);
+                    } else {
+                        clearPlayer();
+                    };
                 };
 
+                //Play prev if there is any
                 function prevSound() {
-                    console.log("prev", songIndex)
-                    if(playList.length > 1 && songIndex > 0) {
-                        clearHighlight()
+                    if(playList.length > 1 && songIndex != 0) {
                         songIndex--
-                        console.log("#" + playList[songIndex].id)
-                        sound = new Audio(playList[songIndex].file)
-                        document.querySelector("#" + playList[songIndex].id).classList.add("active_sound")
+                        sound.src = playList[songIndex].file;
+                        switchSound(playList[songIndex].file, playList[songIndex].id);
                     } 
                 };
 
+                //Clear current sound data
                 function clearPlayer() {
                     sound.pause();
                     counting = false;
                     timer = 0;
                     sound.currentTime = 0;
-                    currentPlayTime.innerHTML = timer;
+                    currentPlayTime.innerHTML = formatTime(timer);
+                    soundTracker.value = 0;
+                    playButton.classList.remove("playerActive");
+                    pauseButton.classList.add("playerActive"); 
                     clearInterval(soundInterval);
-                }
+                };
 
+                //SetSound durations
+                function setValues(duration) {
+                    soundTracker.setAttribute("max", duration);
+                    songLength.innerHTML = formatTime(Math.round(duration));
+                };
 
+                //Switch sound
+                function switchSound(src, id) {
+                    if(sound.readyState === 4) {
+                        clearPlayer();
+                        clearHighlight();
+                        document.querySelector("#" + id).classList.add("active_sound");
+                        setValues(sound.duration);
+                        playSound();
+                    } else {
+                        setTimeout(function(){ switchSound(src, id)  }, 500);
+                    };
+                };
+
+                
 
             </script>
         </body>
