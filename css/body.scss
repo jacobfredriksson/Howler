@@ -1,0 +1,261 @@
+$color_green: #1DB953;
+$color_darkgrey: #212121;
+$color_black: #121212;
+$color_grey: #535353;
+$color_lightgrey: #B3B3B3;
+
+
+.frame::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.frame::-webkit-scrollbar:vertical {
+    width: 11px;
+}
+
+.frame::-webkit-scrollbar:horizontal {
+    height: 11px;
+}
+
+.frame::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid white; /* should match background, can't be transparent */
+    background-color: rgba(0, 0, 0, .5);
+}
+
+.frame::-webkit-scrollbar-track { 
+    background-color: #fff; 
+    border-radius: 8px; 
+} 
+
+body {
+    margin: 0 auto;
+    padding: 0 auto;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: $color_black;
+    color: $color_lightgrey;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.player_wrapper {
+    @media screen and (max-width: 768px) {
+        // height: 100vh;
+    }
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+}
+
+.player_container {
+    @media screen and (max-width: 768px) {
+        width: 100%;
+        height:80%;
+        margin: 20px;
+    }
+    margin: 40px;
+    width: 60%;
+    height: 60%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    .player_main_functions {
+        @media screen and (max-width: 768px) {
+            padding: 15px 5px;
+        }
+        max-height: 300px;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        width: 100%;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
+        background-color: $color_darkgrey;
+        border-radius: 15px;
+        padding: 25px;
+        -webkit-box-shadow: 3px -4px 25px 24px rgba(0,0,0,1);
+        box-shadow: 3px -4px 25px 24px rgba(0,0,0,1);
+
+        
+        .main_functions_top, .main_functions_bottom {
+            margin: 20px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                    justify-content: center;
+            -webkit-box-align: center;
+                -ms-flex-align: center;
+                    align-items: center;
+            width: 100%;
+            .functions_top-flex {
+                @media screen and (max-width: 768px) {
+                    width: 100%;
+                }
+                width: 50%;
+                -ms-flex-pack: distribute;
+                    justify-content: space-around;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                    -ms-flex-align: center;
+                        align-items: center;
+                .play, .pause {
+                    font-size: 50px;
+                    cursor: pointer;
+                }
+            }
+            
+            .prev, .next {
+                font-size: 25px;
+                cursor: pointer;
+            }
+            
+            .start_counter, .end_counter {
+                width: 25px;
+                text-align: center;
+                font-size: 15px;
+                @media screen and (max-width: 768px) {
+                    min-width: 30px;
+                }
+            }
+            
+
+        }
+        
+        .main_functions_bottom {
+            -ms-flex-pack: distribute;
+                justify-content: space-around;
+            font-size: 25px;
+            @media screen and (max-width: 768px) {
+                -ms-flex-wrap: wrap;
+                    flex-wrap: wrap;
+            }
+
+            div {
+                -webkit-box-flex:1;
+                    -ms-flex:1;
+                        flex:1;
+            }
+
+            input {
+                // flex: 4;
+            }
+
+            .stop_button, .toggle_mute_button {
+                @media screen and (max-width: 768px) {
+                    -webkit-box-ordinal-group: 3;
+                        -ms-flex-order: 2;
+                            order: 2;
+                    -webkit-box-flex: 50%;
+                        -ms-flex: 50%;
+                            flex: 50%;
+                    margin-top: 30px;
+                }
+                -ms-flex-wrap: wrap;
+                    flex-wrap: wrap;
+                cursor: pointer;
+                min-width: 30px;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-pack: center;
+                    -ms-flex-pack: center;
+                        justify-content: center;
+                -webkit-box-align: center;
+                    -ms-flex-align: center;
+                        align-items: center;
+            }
+        }
+
+
+    }
+}
+
+.playerActive{
+    display: none;
+}
+
+.soundTracker {
+    width: 50%;
+    margin: 0 20px;
+}
+
+.toggle_mute_button {
+
+}
+
+.upload_container {
+    @media screen and (max-width: 768px) {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        padding: 5px;
+    }
+    width: 100%;
+    padding: 15px 25px 10px 0px;
+    -ms-flex-item-align: start;
+        align-self: flex-start;
+}
+
+.upload_file {
+    background-color: $color_green;
+    padding: 10px;
+    border-radius: 10px;
+    color: #fff;
+}
+
+.playlist_wrapper {
+    width: 100%;
+    background-color: $color_darkgrey;
+    margin: 50px 0;
+    @media screen and (max-width: 768px) {
+        margin: 0;
+        margin-top: 25px; 
+        min-height: 150px;
+    }
+
+    .playlist_container {
+        -webkit-box-shadow: 3px -4px 25px 24px rgba(0,0,0,1);
+        box-shadow: 3px -4px 25px 24px rgba(0,0,0,1);
+        border-radius: 15px;
+
+        min-height: 100%;
+        
+        width: 100%;
+        background-color: $color_darkgrey;
+
+        p {
+            padding: 25px;
+        }
+
+        ol {
+            max-height: 200px;
+            overflow-y: scroll;
+        }
+    }
+}
+
+.active_sound {
+    color: $color_green;
+}
