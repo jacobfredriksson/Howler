@@ -40,9 +40,6 @@ body {
 }
 
 .player_wrapper {
-    @media screen and (max-width: 768px) {
-        // height: 100vh;
-    }
     height: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -155,10 +152,6 @@ body {
                         flex:1;
             }
 
-            input {
-                // flex: 4;
-            }
-
             .stop_button, .toggle_mute_button {
                 @media screen and (max-width: 768px) {
                     -webkit-box-ordinal-group: 3;
@@ -196,10 +189,6 @@ body {
 .soundTracker {
     width: 50%;
     margin: 0 20px;
-}
-
-.toggle_mute_button {
-
 }
 
 .upload_container {
